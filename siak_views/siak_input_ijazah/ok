@@ -1,0 +1,52 @@
+public function siak_create(){
+	
+	$tahun_lulus = $this->siak_model->siak_query("select","select * from transkrip_nilai where nim='".$_POST['nim']."'");
+	foreach($tahun_lulus as $key => $val){
+	$tahun=$val['tahun_lulus'];
+	}
+	
+	$ijazah = $this->siak_model->siak_data_list('ijazah','*');
+	$cek = array();
+	foreach($ijazah as $ija => $zah){
+		$z = explode("/",$zah['no_ijazah']);
+		if($z[4] == $tahun){
+			array_push($cek,"ada");
+		}
+	}
+	
+	
+	$fakultas = $this->siak_model->siak_query("select","select * from prodi where prodi_id='".$_POST['prodi_id']."'");
+	$max_id = $this->siak_model->siak_query('select','select max(id) as max from ijazah');
+	foreach($max_id as $max => $id){
+		$id_max = $id['max'];
+	}
+	$nomor = $this->siak_model->siak_query('select','select * from ijazah where id='".$id_max."'');
+	foreach($nomor as $no => $mor){
+		$plo = explode("/",$mor['no_ijazah']);
+		$nomer = $plo[2];
+	}
+	
+	
+	if(sizeof($cek) == 0){
+		$tambah = '0'.$nomer + 1;
+	}else{
+		$tambah = '01';
+	}
+	
+	foreach($fakultas as $key => $val){
+
+	// $ok = $val['fakultas_id']."/".$val['prodi_kd']."/".$tambah."/M.Si/".$tahun."/UNHAN";
+	$ok = "asd";
+}
+		
+		$data = array(
+				'no_ijazah' => $ok,
+			      'prodi_id' => $_POST['prodi_id'],
+			      'nim' => $_POST['nim'],
+			     
+			      );
+ 		var_dump($data);die();
+		//$this->siak_model->insert_data($data, "ijazah");
+		
+		//header('location: ' . URL . 'siak_data_ijazah');
+	}

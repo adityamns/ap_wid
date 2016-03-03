@@ -1,0 +1,15 @@
+Created:121028
+Site:
+    Link to demo video
+    Fixed-width content (like twitter's)
+    Vertical feedback image at some side(left side?)
+
+App
+    Use Jasmin
+    Use gruntjs
+    Alias for table names
+    Word wrap for generated SQL
+    Add "loading tables..." message on clicking add table
+    When no schema is selected, show message "Select a schema"
+    Fix support for multi-table join queries
+        rewrite object structure and overall logic

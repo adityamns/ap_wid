@@ -1,0 +1,187 @@
+body{
+background:url(../img/bg_login_utama.jpg) no-repeat;
+background-color:#D7E2E9;
+background-size:100%;
+}
+
+.content {
+    background-color: #b25760;
+    border: 2px solid #ddd;
+    border-radius: 5px !important;
+    margin: 0 auto;
+    padding: 20px 20px 15px;
+    width: 291px;
+}
+
+
+#logo{
+float:left;
+vertical-align:middle;
+width:100%;
+}
+#judul{
+font-size:20px;
+font-weight:bold;
+color:#006;
+text-shadow: 1px 1px #000000;
+}
+#judul2{
+font-size:15px;
+color:#006;
+text-shadow: 1px 1px #000000;
+}
+#input-u-pas{
+background:url(../img/bg_form.png) repeat-x;
+border:0px solid #ffffff;
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+border-radius: 4px;
+height:30px;
+width:100%;
+margin-bottom:5px;
+padding:5px;
+}
+#input-u-pas:hover{
+background-color: white;
+color: black;
+box-shadow: 3px 0px 3px  #D1E2EE;
+}
+
+#input-button{
+background:url(../img/bg_button.png) repeat-x;
+border:0px solid #ffffff;
+-webkit-border-radius: 4px;
+-moz-border-radius: 4px;
+border-radius: 4px;
+height:30px;
+margin-bottom:5px;
+padding:5px;
+}
+
+#input-button:hover{
+box-shadow: 3px 0px 3px  #7ABFF8;
+}
+
+
+
+#logo-tengah{
+margin:5px;
+float:center;
+vertical-align:middle;
+}
+#logo-kanan{
+margin:5px;
+margin-top:18px;
+float:right;
+vertical-align:middle;
+}
+.span4 {
+  width: 300px; }
+.offset4 {
+  margin-left: 340px; }
+
+.row-fluid {
+  width: 100%;
+  *zoom: 1; }
+  .row-fluid:before {
+    display: table;
+    content: "";
+    line-height: 0; }
+  .row-fluid:after {
+    display: table;
+    content: "";
+    line-height: 0;
+    clear: both; }
+  .row-fluid [class*="span"] {
+    display: block;
+    width: 100%;
+    min-height: 30px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    float: left;
+    margin-left: 2.127659574468085%;
+    *margin-left: 2.074468085106383%; }
+    .row-fluid [class*="span"]:first-child {
+      margin-left: 0; }
+  .row-fluid .span4 {
+    width: 31.914893617021278%;
+    *width: 31.861702127659576%; }
+  .row-fluid .offset4 {
+    margin-left: 36.170212765957444%;
+    *margin-left: 36.06382978723405%; }
+    .row-fluid .offset4:first-child {
+      margin-left: 34.04255319148936%;
+      *margin-left: 33.93617021276596%; }
+[class*="span"].hide, .row-fluid [class*="span"].hide {
+  display: none; }
+
+[class*="span"].pull-right, .row-fluid [class*="span"].pull-right {
+  float: right; }
+
+.container-fluid {
+  padding-right: 10px;
+  padding-left: 10px;
+  *zoom: 1; }
+  .container-fluid:before {
+    display: table;
+    content: "";
+    line-height: 0; }
+  .container-fluid:after {
+    display: table;
+    content: "";
+    line-height: 0;
+    clear: both; }
+
+
+.signin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 338px;
+  min-height: 340px;
+  height: auto;
+  margin-left: -190px;
+  margin-top: -150px;
+  background:url(../img/bg_login.png);
+  border-radius: 5px !important;
+	padding-left:10px;
+	padding-right:10px;
+	padding-bottom:10px;
+	text-align:center;
+  }
+  
+.signin h2 {
+    line-height: 32px;
+    font-weight: 500;
+    margin-bottom: 20px;
+    color: #e6e6e6; 
+	}
+.signin .signin-wrapper {
+    background: white;
+    border: 5px solid rgba(0, 0, 0, 0.1);
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    padding: 10px; 
+  background:url(../img/bg_login.png);	
+	}
+.signin .signin-wrapper .content {
+      padding: 10px; 
+	}
+.signin .signin-wrapper .content .input {
+        margin-top: 5px;
+        font-weight: 400;
+        background: #fafafa;
+        border: 1px solid #d9d9d9; 
+	}
+.signin .signin-wrapper .content .input:hover, .signin .signin-wrapper .content select:hover {
+        background: whitesmoke;
+      color: #333333; 
+	}
+.signin .signin-wrapper .actions {
+      padding: 5px 10px; 
+	}
+.signin .signin-wrapper .actions a {
+      color: #b3b3b3; 
+	}

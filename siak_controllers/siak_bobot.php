@@ -1,0 +1,233 @@
+<?php
+
+if ( ! defined('SIAK_SYSTEM')) exit('No direct script access allowed');
+
+/* Siak bobot controller class */
+
+class Siak_bobot extends Siak_controller{
+	
+	function __construct(){
+		parent::__construct();
+		parent::siak_logstat();
+		$this->siak_roles();
+		$this->rolePage = $this->siak_session->siak_getAll();
+	}
+
+	function index(){
+		$this->siak_view->config = "Siak Widyatama - Setting Bobot Nilai";
+	
+		$this->siak_view->judul = "Setting Bobot Nilai";
+			
+		$this->siak_breadcrumbs->add(array('title'=>'Pembelajaran','href'=>'#'));
+		$this->siak_breadcrumbs->add(array('title'=>'Penilaian','href'=>'#'));
+		$this->siak_breadcrumbs->add(array('title'=>'Setting Bobot Nilai','href'=>''. URL . 'siak_bobot'));
+		$this->siak_view->set_breadcrumbs($this->siak_breadcrumbs->output());
+		
+		//Hak Akses
+		$method_or_uri = 'siak_bobot';
+		$this->siak_view->rolePage = $this->uri->getRolePage($this->rolePage, $method_or_uri);
+		//
+		
+		$this->siak_datalist();
+	}
+
+	public function siak_datalist(){
+		foreach ($this->siak_session->siak_getAll() as $key => $value) {
+			if ($value['groups'] == "penilaian" && $value['kode'] == "penentuan_bobot_nilai") {
+				$this->siak_view->loads = $value['loads'];
+				$this->siak_view->creates = $value['creates'];
+				$this->siak_view->reades  = $value['reades'];
+				$this->siak_view->updates = $value['updates'];
+				$this->siak_view->deletes = $value['deletes'];
+			}
+		}
+		$this->siak_view->prodi = $this->siak_model->siak_data_list("prodi", "*");
+		$this->siak_view->matkul = $this->siak_model->siak_data_list("matakuliah", "*");
+		$this->siak_view->siak_data_list = $this->siak_model->siak_query("select", "select * from bobot order by id desc;");
+		$this->siak_view->siak_render('siak_bobot/data', false);
+	}
+
+	public function siak_add(){
+		$this->siak_view->prodi = $this->siak_model->siak_data_list("prodi", "*");
+		$this->siak_view->matkul = $this->siak_model->siak_data_list("matakuliah", "*");	
+		$this->siak_view->tahun_masuk = $this->siak_model->siak_query("select", "select distinct tahun_masuk from mahasiswa;");
+		$this->siak_view->siak_render('siak_bobot/add', true);
+	}
+
+	public function siak_create(){
+		$cohort=$_POST['cohort'];
+		$prodi=$_POST['prodi_id'];
+		$matkul=$_POST['matkul_id'];
+		$semes=$_POST['semester'];
+		
+
+		$komponen=$_POST['komponen'];
+		$total = count($_POST['komponen']);
+		$persentase=$_POST['persentase'];
+		$keterangan=$_POST['keterangan'];
+		$mulai=$_POST['mulai'];
+		$akhir=$_POST['akhir'];
+
+		$this->siak_model->siak_query("insert", "insert into bobot (cohort, prodi_id, semester, matkul_id) VALUES ('$cohort','$prodi','$semes','$matkul')");
+		//echo "1. insert into bobot (tahun_id, prodi_id, semester, matkul_id) VALUES ('$tahun','$prodi','$semes','$matkul');<br>";
+		$id=$this->siak_model->siak_query("select","SELECT id FROM bobot ORDER BY id DESC LIMIT 1");
+		
+		foreach ($id as $key => $ida ){
+			$id_bobot=$ida['id'];
+		}
+		for ($i=0 ; $i < $total; $i++){
+			 $this->siak_model->siak_query("insert", "insert into komponen (id_bobot, komponen, persentase, keterangan,mulai,akhir) VALUES ('".$id_bobot."', '".$komponen[$i]."', '".$persentase[$i]."', '".$keterangan[$i]."', '".$mulai[$i]."', '".$akhir[$i]."')");
+			 //echo "2. insert into komponen (id_bobot, komponen, persentase, keterangan,mulai,akhir) VALUES ('".$id_bobot."', '".$komponen[$i]."', '".$persentase[$i]."', '".$keterangan[$i]."', '".$mulai[$i]."', '".$akhir[$i]."');<br>";
+			$id_kompon = $this->siak_model->siak_query("select","SELECT id FROM komponen ORDER BY id DESC LIMIT 1");
+			
+			foreach ($id_kompon as $key => $idkom ){
+				$id_komponen=$idkom['id'];
+			}
+			//var_dump($id_komponen);
+			
+			for ($x=0; $x < sizeof($_POST['sub_komponen'."$i"]); $x++) {
+				$this->siak_model->siak_query("insert", "INSERT INTO sub_komponen (id_komponen, sub_komponen, keterangan) VALUES (".$id_komponen.",'".$_POST['sub_komponen'."$i"][$x]."','');");
+				 echo "3. INSERT INTO sub_komponen (id_komponen, sub_komponen, keterangan) VALUES (".$id_komponen.",'".$_POST['sub_komponen'."$i"][$x]."','')<br>";
+				//echo "INSERT INTO sub_komponen (id_komponen, sub_komponen, keterangan) VALUES (".$id_komponen.",'".$_POST['sub_komponen'."$i"][$x]."','');";
+			}
+		}
+		//die();
+		header('location: ' . URL . 'siak_bobot');
+	}
+
+	public function siak_edit($id){
+		$this->siak_view->prodi = $this->siak_model->siak_data_list("prodi", "*");
+		$this->siak_view->matkul = $this->siak_model->siak_data_list("matakuliah", "*");	
+		$this->siak_view->tahun_masuk = $this->siak_model->siak_query("select", "select distinct tahun_masuk from mahasiswa;");
+		$where = array('id' => $id);
+		$where2 = array('id_bobot' => $id);
+		$this->siak_view->siak_data = $this->siak_model->siak_edit($where, "bobot", "*");
+		$this->siak_view->siak_data_komponen = $this->siak_model->siak_edit($where2, "komponen", "*");
+		$this->siak_view->sub_komponen = $this->siak_model->siak_data_list("sub_komponen", "*");
+		$this->siak_view->siak_render('siak_bobot/edit', true);
+	}
+
+	public function siak_edit_save($id){
+		
+// 		$edit_cohort=$_POST['cohort_edit'];
+// 		$edit_prodi=$_POST['prodi_id_edit'];
+// 		$edit_matkul=$_POST['matkul_id_edit'];
+// 		$edit_semes=$_POST['semester_edit'];
+		
+		$edit_cohort=$_POST['cohort'];
+		$edit_prodi=$_POST['prodi_id'];
+		$edit_matkul=$_POST['matkul_id'];
+		$edit_semes=$_POST['semester'];
+
+		$edit_komponen=$_POST['komponen_edit'];
+		$edit_persentase=$_POST['persentase_edit'];
+		$edit_keterangan=$_POST['keterangan_edit'];
+		$edit_mulai=$_POST['mulai_edit'];
+		$edit_akhir=$_POST['akhir_edit'];
+		
+		$edit_id_komponen=$_POST['id_edit'];
+		$edit_total = count($edit_id_komponen);
+		
+		$edit_sub_komponen=$_POST['sub_komponen_edit'];
+		$edit_id_sub_komponen=$_POST['id_sub_edit'];
+		$edit_total2 = sizeof($edit_id_sub_komponen);
+		
+		foreach($_POST['id_edit'] as $key => $recBob){
+			$sqlUpBob = "update bobot set matkul_id = '".$edit_matkul."', prodi_id = '".$edit_prodi."', cohort = '".$edit_cohort."', semester = '".$edit_semes."' where id = '".$_POST['id_edit'][$key]."'";
+// 			echo "BOBOT = ".$sqlUpBob."<br>";
+			$this->siak_model->siak_query("update", $sqlUpBob);
+
+			if($_POST['sub_komponen'.$recBob] == TRUE){
+			
+				foreach($_POST['sub_komponen'.$recBob] as $key => $recInsSub){
+					$sqlInsSub = "INSERT INTO sub_komponen(id_komponen, sub_komponen) values('".$recBob."','".$recInsSub."')";
+// 					echo "<br>INSERT SUB KOMPONEN = ".$sqlInsSub."<br>";
+					$this->siak_model->siak_query("insert", $sqlInsSub);
+				}
+// 				
+			}
+
+		}
+			
+		if($_POST['komponen'] == TRUE){
+			foreach($_POST['komponen'] as $key => $recInsBob){
+				$sqlInsBob = "INSERT INTO komponen(id_bobot, komponen, persentase, mulai, akhir) values('".$id."','".$recInsBob."','".$_POST['persentase'][$key]."','".$_POST['mulai'][$key]."', '".$_POST['akhir'][$key]."')";
+// 				echo "INSERT KOMPONEN = ".$sqlInsBob."<br>";
+				$this->siak_model->siak_query("insert", $sqlInsBob);
+			}
+			
+			$cari = "SELECT id FROM komponen where mulai = '".$_POST['mulai'][$key]."' and akhir = '".$_POST['akhir'][$key]."' and id_bobot = '".$id."' ORDER BY id DESC LIMIT 1";
+			$id_kom = $this->siak_model->siak_query("select", $cari);
+			
+			foreach($_POST['sub_komponen'] as $key => $recInsSub){
+				$sqlInsSub2 = "INSERT INTO sub_komponen(id_komponen, sub_komponen) values('".$id_kom[0]['id']."','".$recInsSub."')";
+// 				echo "<br>INSERT SUB KOMPONEN = ".$sqlInsSub2."<br>";
+				$this->siak_model->siak_query("insert", $sqlInsSub2);
+			}
+		}
+		
+		foreach($_POST['komponen_edit'] as $key => $recKom){
+			$sqlUpKom = "update komponen set komponen = '".$_POST['komponen_edit'][$key]."', persentase = '".$_POST['persentase_edit'][$key]."', mulai = '".$_POST['mulai_edit'][$key]."', akhir = '".$_POST['akhir_edit'][$key]."' where id = '".$_POST['id_edit'][$key]."';";
+// 			echo "<br>KOMPONEN = ".$sqlUpKom."<br>";
+			$this->siak_model->siak_query("update", $sqlUpKom);
+		}
+		
+		foreach($_POST['sub_komponen_edit'] as $key => $recSub){
+			$sqlUpSub = "update sub_komponen set sub_komponen = '".$_POST['sub_komponen_edit'][$key]."' where id = '".$_POST['id_sub_edit'][$key]."';";
+// 			echo "<br>SUB KOMPONEN = ".$sqlUpSub."<br>";
+			$this->siak_model->siak_query("update", $sqlUpSub);
+		}
+// 		die();
+		header('location: ' . URL . 'siak_bobot');
+	}
+	
+	function ajaxDelSub(){
+// 		var_dump($_POST);
+		$id = $_POST['id'];
+		$del1 = "delete from sub_komponen where id = '$id'";
+// 		$del1 = "delete from komponen where id = '$id'";
+		
+		$this->siak_model->siak_query('delete', $del1);
+// 		$this->siak_model->siak_query('delete', $del2);
+	}
+	
+	function ajaxDel(){
+// 		var_dump($_POST);
+		$id = $_POST['id'];
+		$del1 = "delete from sub_komponen where id_komponen = '$id'";
+		$del1 = "delete from komponen where id = '$id'";
+		
+		$this->siak_model->siak_query('delete', $del1);
+		$this->siak_model->siak_query('delete', $del2);
+	}
+
+	public function siak_detail($ruang_id){
+		$where = array('ruang_id' => $ruang_id);
+		$this->siak_view->siak_data = $this->siak_model->siak_edit($where, "bobot", "*");
+		$this->siak_view->siak_render('siak_bobot/view', false);
+	}
+	
+	public function siak_delete($id){
+		$where = array('id' => $id);
+		$this->siak_model->siak_delete($where);
+		header('location: ' . URL . 'siak_bobot');
+	}
+
+	public function matkul($prodi_id,$semester){
+		
+		$this->siak_view->siak_data = $this->siak_model->siak_query('select', "select *from matakuliah where prodi_id='$prodi_id' and semester='$semester'");
+		// var_dump($this->siak_view->siak_data);
+		$this->siak_view->siak_render('siak_bobot/matkul', true);
+	}
+
+	public function dosen($matkul_id){
+		$this->siak_view->dosen = $this->siak_model->siak_data_list("dosen", "*");
+		$where = array('kode_matkul' => $matkul_id);
+		$this->siak_view->siak_data = $this->siak_model->siak_edit($where, "dosen_matakuliah", "*");
+		// var_dump($this->siak_view->siak_data);
+		$this->siak_view->siak_render('siak_bobot/dosen', true);
+	}
+
+}
+
+?>

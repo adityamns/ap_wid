@@ -1,0 +1,395 @@
+<?php 
+// var_dump($this->siak_userdata); echo "<br>";
+// foreach ($this->siak_userdata as $key => $value) {
+	// echo $value['groups']=="master"?$value['groups']." : ".$value['nama']."=>".URL.$value['url']."<br> Load = ".$value['loads'].", Create = ".$value['creates'].", Read = ".$value['reades'].", Update = ".$value['updates'].", Delete = ".$value['deletes']."<br><br>":"";
+	// echo $value['groups']." : ".$value['nama']."=>".URL.$value['url']."<br> Load = ".$value['loads'].", Create = ".$value['creates'].", Read = ".$value['reades'].", Update = ".$value['updates'].", Delete = ".$value['deletes']."<br><br>";
+// } 
+
+	/**	DATA MAHASISWA AKTIF DEFAULT **/
+	$data=array();
+	$series=array();
+	$xAxix=array();
+	foreach ($this->siak_data as $key => $value) {
+		$data['name']=$value['fakultas'];
+		$data['data']=$value['jumlah'];
+			if($value['fakultas_id']=='S'){
+				$data['color']='red';
+			}
+			elseif($value['fakultas_id']=='M'){
+				$data['color']='blue';
+			}
+			elseif($value['fakultas_id']=='K'){
+				$data['color']='green';
+			}
+		$xAxix=$value['fakultas'];
+		array_push($series,$data);
+			
+	}
+	
+
+		$json = json_encode($series);
+		$json = str_replace('"'.$value['jumlah'].'"','['.$value['jumlah'].']',$json);
+		
+			
+?>
+<!-- Welcome welcome welcome !!! -->
+<style>
+label.atas {
+		color: red;
+		font-weight: bold;
+		display: block;
+		float: center;
+		}
+
+</style>
+<div class='panel-body'>
+
+	<div class="row" style="border: 5px solid;padding:10px 20px;">
+		<div  class='row' style="border: 2px solid #F5F5F5;padding: 20px; background-color: #F5F5F5;border-radius: 20px;">
+		<div class='row'>
+		<div class="form-group col-md-5">
+			<label for="jenis_ruang" class="atas">Pencarian</label>
+		</div>
+		</div>
+		<div class="form-group col-md-1">
+			<label for="jenis_ruang" class="control-label">Tahun</label>
+		</div>
+		<div class="form-group col-md-2">
+			<select name="jenis_ruang" class="form-control">
+				<option value='Pilih'>Pilih</option>
+			</select>
+		</div>
+		</div>
+		
+	<div class="form-group col-md-4">
+			<script type="text/javascript">
+				jQuery(function () {
+						jQuery('#container').highcharts({
+             chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Grafik Mahasiswa Aktif Berdasarkan Fakultas'
+            },
+            subtitle: {
+                text: 'Sumber: Akademik Unhan'
+            },
+            xAxis: {
+                categories: [
+                   <?php foreach ($this->siak_fakultas as $key => $value) {
+					if($value['fakultas_id']=='S'){
+						echo "'Strategi Pertahanan'";
+						}
+						elseif($value['fakultas_id']=='M'){
+							echo "'Manajemen Pertahanan'";
+						}
+						elseif($value['fakultas_id']=='K'){
+							echo "'Keamanan Negara'";
+						}
+				   echo ',';
+				   } ?>
+				   
+                ]
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Jumlah'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y} orang</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [
+			<?php foreach ($this->siak_fakultas as $key => $value) { ?>
+			{
+                name: '<?php echo $value['fakultas']; ?>',
+                data: [<?php echo $value['jumlah']; ?>],
+				color:'<?php 
+						if($value['fakultas_id']=='S'){
+						echo 'red';
+						}
+						elseif($value['fakultas_id']=='M'){
+							echo 'blue';
+						}
+						elseif($value['fakultas_id']=='K'){
+							echo 'green';
+						}
+					?>'
+    
+            }
+			<?php } ?>
+			]
+        });
+    });
+
+		</script>
+	
+
+
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<div id='hide'>
+<?php
+echo '<table border=1 id=data><tr><td>Keterangan</td>';
+				foreach ($totalPenyakit as $n => $pyk){
+					echo '<th>'.$pyk['penyakit'].'</th>';
+				}
+				echo '</tr>';
+		foreach ($totalMinggu as $m => $MG){
+				
+				echo '<tr><td>'.$MG['minggu'].'</td>';
+				foreach($totalValue as $v => $val){
+					if($val['minggu']==$MG['minggu']){
+						echo '<td>'.$val['value'].'</td>';
+					}
+				}
+				echo '</tr>';
+			}
+			echo '</table>';
+?>
+</div>
+			</div>
+			<div class="form-group col-md-8">
+			<script type="text/javascript">
+				jQuery(function () {
+						jQuery('#container2').highcharts({
+             chart: {
+                type: 'column'
+            },
+            title: {
+                text: 'Grafik Mahasiswa Aktif Berdasarkan Prodi'
+            },
+            subtitle: {
+                text: 'Sumber: Akademik Unhan'
+            },
+            xAxis: {
+                categories: [
+                   <?php $no=1; foreach ($this->siak_prodi as $key => $value) {
+					echo "'".$value['prodi']."'";
+					} ?>
+				   
+                ]
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Jumlah'
+                }
+            },
+            tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y} orang</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+            },
+            plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+            },
+            series: [
+			<?php foreach ($this->siak_prodi as $key => $value) { ?>
+			{
+                name: '<?php echo $value['prodi_id']; ?>',
+                data: [<?php echo $value['jumlah']; ?>]
+    
+            }
+			<?php } ?>
+			]
+        });
+    });
+	// chart: {
+                // type: 'column'
+            // },
+            // title: {
+                // text: 'World\'s largest cities per 2014'
+            // },
+            // subtitle: {
+                // text: 'Source: <a href="http://en.wikipedia.org/wiki/List_of_cities_proper_by_population">Wikipedia</a>'
+            // },
+            // xAxis: {
+                // type: 'category',
+                // labels: {
+                    // rotation: -45,
+                    // align: 'right',
+                    // style: {
+                        // fontSize: '13px',
+                        // fontFamily: 'Verdana, sans-serif'
+                    // }
+                // }
+            // },
+            // yAxis: {
+                // min: 0,
+                // title: {
+                    // text: 'Population (millions)'
+                // }
+            // },
+            // legend: {
+                // enabled: false
+            // },
+            // tooltip: {
+                // pointFormat: 'Population in 2008: <b>{point.y:.1f} millions</b>',
+            // },
+            // series: [{
+                // name: 'Population',
+                // data: [
+				// <?php foreach ($this->siak_prodi as $key => $value) { ?>
+                    // ['<?php echo $value['prodi']; ?>', <?php echo $value['jumlah']; ?>]
+				// <?php } ?>
+                // ],
+                // dataLabels: {
+                    // enabled: true,
+                    // rotation: -90,
+                    // color: '#FFFFFF',
+                    // align: 'right',
+                    // x: 4,
+                    // y: 10,
+                    // style: {
+                        // fontSize: '13px',
+                        // fontFamily: 'Verdana, sans-serif',
+                        // textShadow: '0 0 3px black'
+                    // }
+                // }
+            // }]
+        // });
+    // });
+
+		</script>
+	
+
+
+<div id="container2" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+	</div>
+	<div class='row'></div>
+	<div  class='row' style="border: 2px solid #F5F5F5;padding: 20px; background-color: #F5F5F5;border-radius: 20px;">
+		<div class='row'>
+		<div class="form-group col-md-5">
+			<label for="jenis_ruang" class="atas">Pencarian</label>
+		</div>
+		</div>
+		<div class="form-group col-md-1">
+			<label for="jenis_ruang" class="control-label">Tahun</label>
+		</div>
+		<div class="form-group col-md-2">
+			<select name="jenis_ruang" class="form-control">
+				<option value='Pilih'>Pilih</option>
+			</select>
+		</div>
+		</div>
+		<!--<div class="form-group col-md-3" style="border: 3px solid;padding:10px 20px;">
+			<div id='cssmenu'>
+				<ul>
+				   <li><a href='http://google.com'><span>Home</span></a></li>
+				   <li><a href='http://google.com'><span>Products</span></a>
+						<ul>
+							<li>
+								<input type="text" class="form-control" name="ruang_id" id="ruang_id" placeholder="Kode Ruang...">
+								<input type="text" class="form-control" name="ruang_id" id="ruang_id" placeholder="Kode Ruang...">
+							</li>
+								 
+						 </ul>
+				   </li>
+				   <li><a href='#'><span>Company</span></a>
+						  <ul>
+							 <li><a href='#'>About</a></li>
+							 <li><a href='#'>Location</a></li>
+						  </ul>
+				   </li>
+				   <li><a href='#'><span>Contact</span></a></li>
+				</ul>
+			</div>
+		</div>-->
+	<div class="form-group col-md-7">
+			<script type="text/javascript">
+				jQuery(function () {
+						jQuery('#container3').highcharts({
+      chart: {
+                type: 'bar'
+            },
+            title: {
+                text: 'Historic World Population by Region'
+            },
+            subtitle: {
+                text: 'Source: Wikipedia.org'
+            },
+            xAxis: {
+                categories: ['2010', '2011', '2012', '2013', '2014'],
+                title: {
+                    text: null
+                }
+            },
+            yAxis: {
+                min: 0,
+                title: {
+                    text: 'Jumlah (orang)',
+                    align: 'high'
+                },
+                labels: {
+                    overflow: 'justify'
+                }
+            },
+            tooltip: {
+                valueSuffix: ' orang'
+            },
+            plotOptions: {
+                bar: {
+                    dataLabels: {
+                        enabled: true
+                    }
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -40,
+                y: 100,
+                floating: true,
+                borderWidth: 1,
+                backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor || '#FFFFFF'),
+                shadow: true
+            },
+            credits: {
+                enabled: false
+            },
+            series: [{
+                name: 'Masuk',
+                data: [50, 75, 75, 75, 75],
+				color:'green'
+            },
+			{
+                name: 'Kuliah',
+                data: [5, 25, 10, 35, 15],
+				color:'red'
+            }, {
+                name: 'Lulus',
+                data: [45, 50, 65, 45, 60],
+				color:'blue'
+            }]
+        });
+    });
+
+		</script>
+	
+
+
+<div id="container3" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+			</div>
+			</div>
+

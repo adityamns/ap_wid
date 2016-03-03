@@ -1,0 +1,49 @@
+<?php if ($this->reades == "t") { ?>
+<div class="panel panel-primary">
+	<div class="panel-body" >
+		<?php if ($this->creates == "t") { ?>
+		<div class="input-group">
+			<a href="<?php echo URL; ?>siak_badan_hukum/siak_add/" id='variousB0'><button class="btn btn-default btn-xs"><span class="glyphicon glyphicon-plus" data-toggle="modal" data-target="#myModal"></span> Add Data</button></a>
+		</div>
+		<?php } ?>
+		<hr>
+		<table id="badan_hukum" class="table table-bordered table-striped table-hover table-contextual table-responsive">
+			<thead>
+				<tr align = "center">
+					<td>NO</td>
+					<td>KODE</td>
+					<td>SINGKATAN</td>
+					<td>NAMA</td>
+					<td>KOTA</td>
+					<td>ACTION</td>
+				</tr>
+			</thead>
+			<tbody>
+				<?php
+				$i = 0;
+				foreach ($this->siak_data_list as $key => $value) {
+					$i++;
+					echo "<tr class='active'>";
+					echo "<td align = 'center'>" . $i . "</td>";
+					echo "<td>" . $value['kode_kampus'] . "</td>";
+					echo "<td>" . $value['singkatan'] . "</td>";
+					echo "<td>" . $value['nama'] . "</td>";
+					echo "<td>" . $value['kota'] . "</td>";
+					echo "<td align = 'center'>";
+					echo $this->updates=="t"?"<a id='variousB$i' href = '".URL."siak_badan_hukum/siak_edit/".$value['kode_kampus']."'> <span class='glyphicon glyphicon-edit'></span> </a>":"";
+					echo "&nbsp";
+					echo $this->deletes=="t"?"<a href = '".URL."siak_badan_hukum/siak_delete/".$value['kode_kampus']."' class='ask'> <span class='glyphicon glyphicon-trash'></span> </a>":"";
+					echo "</td>";
+					echo "</tr>";
+				}
+				?>
+			</tbody>
+		</table>
+		<script type="text/javascript">
+			fancy();
+			asd();
+			askDelete();
+		</script>
+		<?php }else{ ?>
+		<div class="alert alert-danger">Anda Tidak Mempunyai Hak Untuk Mengakses Halaman Ini...</div>
+		<?php } ?>

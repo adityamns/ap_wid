@@ -1,0 +1,157 @@
+<?php 
+// echo "<pre>";
+// var_dump($this->data);
+// echo "</pre>";
+// die();
+?>
+
+<?php foreach ($this->siak_data as $key => $value) { ?>
+<div class="panel panel-danger">
+	<div class="panel-heading">
+		<h3 class="panel-title">Form Mata Kuliah Pilihan</h3>
+	</div>
+	<div class="panel-body" style="width:750px;">
+		<div class="container-fluid">
+			<form class="form-horizontal" method = "post" action="<?php echo URL;?>siak_rencana_studi/insert_matkul_pilihan">
+				<div class="row">
+ 					<div class="form-group col-md-3"><label for="nama" class="control-label">NIM</label></div>
+					<div class="form-group col-md-9"><input type="text" class="form-control" readonly name="nim" id="nim" value="<?php echo $value['nim']; ?>"></div>
+				</div>
+				<div class="row">
+ 					<div class="form-group col-md-3"><label for="prodi_id" class="control-label">PRODI</label></div>
+					<div class="form-group col-md-9">
+						<select id="prodi_id" name="prodi_id" class="form-control" readonly>
+							<option value="0">- Prodi -</option>
+							<?php foreach ($this->prodi as $key => $val) { ?>
+							<option value="<?php echo $val['prodi_id'];?>" <?php echo $value['prodi_id']==$val['prodi_id']?"selected":"";?>><?php echo $val['prodi'];?></option>
+							<?php }?>
+						</select>
+					</div>
+				</div>
+				<div class="row">
+ 					<div class="form-group col-md-3"><label for="semester" class="control-label">SEMESTER</label></div>
+					<div class="form-group col-md-9"><input type="text" readonly class="form-control" name="semester" id="semester" value="<?php echo $this->semester; ?>"></div>
+				</div>
+				<div class="row">
+					<div class="form-group col-md-3"><label for="dosen_utama" class="control-label">MATA KULIAH</label></div>
+					<div class="form-group col-md-9">
+						<div class="input-group">
+							<div id="variablegroup">
+							</div>
+						</div>
+						<button class="btn btn-default btn-xs" type="button" onClick="addVariable();">Tambah Matkul</button>
+					</div>
+				</div>
+				<?php 
+				foreach($this->data2 as $data => $row){
+// 				var_dump($row);
+				?>
+				<!-- input nilai mahasiswa -->
+				<input type="hidden" name="matkul_id[]" value="<?=$row['kode_matkul']?>" id="matkul_id">
+				<?php } ?>
+	 			<div class="control-group">
+	 				<label class="control-label">&nbsp</label>
+	 				<div class="controls">
+	 					<div>
+	 						<input type = "button" value = "INSERT" class = "btn btn-medium btn-primary " link="<?php echo URL;?>siak_rencana_studi/matkul_pil" onclick="matkul_pil(this)" />
+	 						<input type = "button" value = "BATAL" class = "btn btn-medium btn-warning " onclick="fancyClose()"/>
+	 					</div>
+	 				</div>
+	 			</div> 
+			</form>
+		</div>
+	</div>
+</div>
+<?php } ?>
+
+
+<script type="text/javascript">
+	var array_data = <?php echo json_encode($this->data); ?>;
+	
+	jQuery(function() {
+		jQuery( "#tgl_mulai" ).datepicker(option);
+		jQuery( "#tgl_selesai" ).datepicker(option);
+	});
+
+	function addVariable(){
+		var varGroup = document.getElementById("variablegroup");
+		var rnumber=Math.random();
+		var html = "";
+		if(array_data == undefined) {
+		  html = "<h5>Maaf Matakuliah Pilihan Masih Kosong</h5>"+
+			  "<button class='btn btn-default btn-xs' type='button' onClick=\"deleteThisVar(this);\" style='float:right'>Hapus</button>";
+		} else {
+		  html = "<select name = 'kode_matkul[]' class='kode_matkul'>";
+		  jQuery.each(array_data, function(key, val){
+		    html += "<option value='<?php echo $val['kode_matkul']; ?>'><?php echo $val['nama_matkul']; ?></option>";
+		  });
+		  html += "</select><button class='btn btn-default btn-xs' type='button' onClick=\"deleteThisVar(this);\">Hapus</button>";
+		}
+		var html = 
+			    <?php 
+			    if(sizeof($this->data) <= 0){ 
+			    ?>
+			    "<h5>Maaf Matakuliah Pilihan Masih Kosong</h5>"+
+			    "<button class='btn btn-default btn-xs' type='button' onClick=\"deleteThisVar(this);\" style='float:right'>Hapus</button>";
+			    <?php
+			    }else{
+			    ?>
+			    "<select name = 'kode_matkul[]' class='kode_matkul'>"+
+			    <?php
+			    foreach ($this->data as $key => $val) { ?>
+			    "<option value='<?php echo $val['kode_matkul']; ?>'><?php echo $val['nama_matkul']; ?></option>"+
+			    <?php } ?> 
+			    "</select><button class='btn btn-default btn-xs' type='button' onClick=\"deleteThisVar(this);\">Hapus</button>";
+			    <?php } ?>
+		jQuery("#variablegroup").append(jQuery("<div class='input-group' id=\'"+ rnumber +"\'>"+ html +"<br><br></div>"));
+	}
+	
+
+	function matkul_pil(value){
+	  var ar_kode = jQuery('.kode_matkul');
+	  parent.addRow(ar_kode);
+// 	  var nim = document.getElementById('nim').value;
+// 	  var semester = document.getElementById('semester').value;
+// 	  var url = jQuery(value).attr('link');
+// 	  var strURL = url+"/"+nim+"/"+semester;
+	  
+// 	  var data_kode_matkul = document.getElementById('kode_matkul').value;
+// 	  var array_kode = [document.getElementById('kode_matkul').value];
+	  /*
+	  var ajax = jQuery.ajax({
+	    type:"post",
+	    dataType:"json",
+	    data:{
+		      nim : document.getElementById('nim').value,
+		      prodi_id : document.getElementById('prodi_id').value,
+		      smstr: document.getElementById('semester').value,
+		      matkul_id: document.getElementById('matkul_id').value,
+		      kode_matkul: array_kode,
+		  },
+	    async: false,
+	    url: url,
+	  });*/
+	  
+// 	  alert(ajax.responseText);
+// 	  console.log(data);
+	  
+	  
+	//   var req = getXMLHTTP();
+	//   if (req) {
+	//     req.onreadystatechange = function() {
+	//       if (req.readyState == 4) {
+	// 	if (req.status == 200) {
+	// 	  document.getElementById('irs').innerHTML=req.responseText;
+	// 	  askDelete();
+	// 	  fancy();
+	// 	} else {
+	// 	  alert("Mohon lengkapi semua isian...");
+	// 	}
+	//       }       
+	//     }     
+	//     req.open("GET", strURL, true);
+	//     req.send(null);
+	//   }
+	  
+	}
+</script>

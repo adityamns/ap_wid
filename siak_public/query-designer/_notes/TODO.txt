@@ -1,0 +1,49 @@
+120711
+
+site
+    Add ads to site
+    - Improve text
+    Link demo video
+
+youtube
+    Add demo video
+    
+demo
+    - Add 'link to website' on Demo
+
+app
+    Improve UI
+    - add another table(accts)
+    - change <pre> font to Consolas
+    change opacity of drag helper
+    - reduce size of cell-diag
+        - reduce font size
+    reduce line-item height
+    - show gui elements only on selection of schema
+    - refresh where part on changing of text.
+    greasemonkey script
+    fix: removing and adding table again
+    feature: remove join
+    feature: copy SQL
+    add "Loading tables/views
+sf homepage
+    - update home page link
+    
+Build (any one of these)
+    Study make tools
+        gruntjs
+    Create custom script 
+    *Create Branch
+
+
+#wow, people are downloading web-vqd. [2012-10-03]
+use Jasmin
+use gruntjs
+provision for feedback
+    - anonymous feedback
+    - landing page on website, URL to be accessible even from local web-vqd instance
+    vertical feedback image at some side(left side?)
+project-website: 
+    fixed-width content (like twitter's)
+
+
